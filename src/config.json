@@ -3,6 +3,6 @@
     "user": "soelve",
     "password": "fuckjvm",
     "address": "localhost:5433",
-    "database": "customer_db"
+    "database": "hvalfangst_db"
   }
 }

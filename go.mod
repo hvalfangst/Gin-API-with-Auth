@@ -1,4 +1,4 @@
-module hvalfangst/jwt-golang-gin
+module hvalfangst/gin-api-with-auth
 
 go 1.19
 

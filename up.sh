@@ -7,7 +7,7 @@ set -e
 docker-compose -f docker/db/docker-compose.yml up -d
 
 # Build the Go application
-go build -o myapp src/main.go
+go build -o gin_api_with_auth src/main.go
 
 # Run the application
-./myapp
+./gin_api_with_auth

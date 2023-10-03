@@ -6,6 +6,6 @@ services:
     environment:
       - POSTGRES_USER=soelve
       - POSTGRES_PASSWORD=fuckjvm
-      - POSTGRES_DB=customer_db
+      - POSTGRES_DB=hvalfangst_db
     ports:
       - '5433:5432'
