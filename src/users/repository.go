@@ -33,3 +33,22 @@ func getByEmail(db *pg.DB, email string) (*User, error) {
 	}
 	return user, nil
 }
+
+func deleteByID(db *pg.DB, userID int64) error {
+	user := &User{ID: userID}
+
+	_, err := db.Model(user).WherePK().Delete()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func deleteByEmail(db *pg.DB, email string) error {
+	user := &User{}
+	_, err := db.Model(user).Where("email = ?", email).Delete()
+	if err != nil {
+		return err
+	}
+	return nil
+}

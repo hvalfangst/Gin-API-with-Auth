@@ -34,7 +34,7 @@ func GetUserByIDHandler(db *pg.DB) gin.HandlerFunc {
 
 		user, err := getByID(db, userID)
 		if err != nil {
-			c.JSON(500, gin.H{"error": "Failed to retrieve user by ID"})
+			c.JSON(404, gin.H{"error": "User doesn't exist"})
 			return
 		}
 		c.JSON(200, gin.H{"user": user})
@@ -44,12 +44,42 @@ func GetUserByIDHandler(db *pg.DB) gin.HandlerFunc {
 func GetUserByEmailHandler(db *pg.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		email := c.Param("email")
-
 		user, err := getByEmail(db, email)
 		if err != nil {
-			c.JSON(500, gin.H{"error": "Failed to retrieve user by email"})
+			c.JSON(404, gin.H{"error": "User doesn't exist"})
 			return
 		}
 		c.JSON(200, gin.H{"user": user})
+	}
+}
+
+func DeleteUserByIdHandler(db *pg.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		userIDParam := c.Param("id")
+		userID, err := strconv.ParseInt(userIDParam, 10, 64)
+		if err != nil {
+			c.JSON(400, gin.H{"error": "Invalid user ID"})
+			return
+		}
+
+		err = deleteByID(db, userID)
+		if err != nil {
+			c.JSON(404, gin.H{"error": "User doesn't exist"})
+			return
+		}
+		c.JSON(200, gin.H{"message": "User has been deleted"})
+	}
+}
+
+func DeleteUserByEmailHandler(db *pg.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		email := c.Param("email")
+
+		err := deleteByEmail(db, email)
+		if err != nil {
+			c.JSON(404, gin.H{"error": "User doesn't exist"})
+			return
+		}
+		c.JSON(200, gin.H{"message": "User has been deleted"})
 	}
 }
