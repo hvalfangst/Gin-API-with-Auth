@@ -3,16 +3,16 @@ package db
 import (
 	"github.com/go-pg/pg/v10"
 	"github.com/go-pg/pg/v10/orm"
-	"hvalfangst/gin-api-with-auth/src/common/utils"
+	"hvalfangst/gin-api-with-auth/src/common/utils/configuration"
 	"log"
 )
 
-func ConnectDatabase(config utils.Configuration) *pg.DB {
+func ConnectDatabase(config configuration.Db) *pg.DB {
 	opts := &pg.Options{
-		User:     config.Db.User,
-		Password: config.Db.Password,
-		Addr:     config.Db.Address,
-		Database: config.Db.Database,
+		User:     config.User,
+		Password: config.Password,
+		Addr:     config.Address,
+		Database: config.Database,
 	}
 	return pg.Connect(opts)
 }

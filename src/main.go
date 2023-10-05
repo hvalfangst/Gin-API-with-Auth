@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"hvalfangst/gin-api-with-auth/src/common/db"
-	"hvalfangst/gin-api-with-auth/src/common/utils"
+	"hvalfangst/gin-api-with-auth/src/common/utils/configuration"
 	"hvalfangst/gin-api-with-auth/src/users/model"
 	"hvalfangst/gin-api-with-auth/src/users/route"
 	"log"
@@ -12,14 +12,14 @@ import (
 func main() {
 	r := gin.Default()
 
-	// Map environment variables from 'config.json' to be used as Configuration
-	config, err := utils.ReadConfig("src/config.json")
+	// Fetch JSON based on key 'db' for file 'configuration.json' to be used as Db
+	conf, err := configuration.Get("db")
 	if err != nil {
-		log.Fatalf("Error reading config file: %v", err)
+		log.Fatalf("Error reading configuration file: %v", err)
 	}
 
-	// Connect to the database based on Configuration derived from 'config.json'
-	database := db.ConnectDatabase(config)
+	// Connect to the database based on Configuration derived from 'configuration.json'
+	database := db.ConnectDatabase(conf.(configuration.Db))
 	defer db.CloseDatabase(database)
 
 	// Create the 'users' table

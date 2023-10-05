@@ -4,5 +4,8 @@
     "password": "fuckjvm",
     "address": "localhost:5433",
     "database": "hvalfangst_db"
+  },
+  "jwt": {
+    "encryption_key": "NeverStoreKeysLikeThisUseEnvironmentVariableMappingInstead"
   }
 }
