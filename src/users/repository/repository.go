@@ -1,11 +1,12 @@
-package users
+package repository
 
 import (
 	"github.com/go-pg/pg/v10"
+	"hvalfangst/gin-api-with-auth/src/users/model"
 	"log"
 )
 
-func create(db *pg.DB, user *User) error {
+func Create(db *pg.DB, user *model.User) error {
 	_, err := db.Model(user).Insert()
 	if err != nil {
 		log.Printf("Error creating user: %v", err)
@@ -14,8 +15,8 @@ func create(db *pg.DB, user *User) error {
 	return nil
 }
 
-func getByID(db *pg.DB, userID int64) (*User, error) {
-	user := &User{}
+func GetById(db *pg.DB, userID int64) (*model.User, error) {
+	user := &model.User{}
 	err := db.Model(user).Where("id = ?", userID).Select()
 	if err != nil {
 		log.Printf("Error retrieving user by ID: %v", err)
@@ -24,8 +25,8 @@ func getByID(db *pg.DB, userID int64) (*User, error) {
 	return user, nil
 }
 
-func getByEmail(db *pg.DB, email string) (*User, error) {
-	user := &User{}
+func GetByEmail(db *pg.DB, email string) (*model.User, error) {
+	user := &model.User{}
 	err := db.Model(user).Where("email = ?", email).Select()
 	if err != nil {
 		log.Printf("Error retrieving user by email: %v", err)
@@ -34,8 +35,8 @@ func getByEmail(db *pg.DB, email string) (*User, error) {
 	return user, nil
 }
 
-func deleteByID(db *pg.DB, userID int64) error {
-	user := &User{ID: userID}
+func DeleteByID(db *pg.DB, userID int64) error {
+	user := &model.User{ID: userID}
 
 	_, err := db.Model(user).WherePK().Delete()
 	if err != nil {
@@ -44,8 +45,8 @@ func deleteByID(db *pg.DB, userID int64) error {
 	return nil
 }
 
-func deleteByEmail(db *pg.DB, email string) error {
-	user := &User{}
+func DeleteByEmail(db *pg.DB, email string) error {
+	user := &model.User{}
 	_, err := db.Model(user).Where("email = ?", email).Delete()
 	if err != nil {
 		return err
