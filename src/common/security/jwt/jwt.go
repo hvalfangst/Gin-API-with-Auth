@@ -11,9 +11,9 @@ func GenerateToken(user *model.User) (string, error) {
 
 	// Define the JWT claims
 	claims := jwt.MapClaims{
-		"sub":  user.Email,
-		"role": user.Role,
-		"exp":  time.Now().Add(time.Hour).Unix(), // Token expires in 1 hour
+		"sub":    user.Email,
+		"access": user.Access,
+		"exp":    time.Now().Add(time.Hour).Unix(), // Token expires in 1 hour
 	}
 
 	// Create the JWT token with the claims
