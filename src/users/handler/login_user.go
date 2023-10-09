@@ -20,7 +20,7 @@ func LoginUser(db *pg.DB) gin.HandlerFunc {
 			return
 		}
 
-		token, err := jwt.GenerateToken(user)
+		token, err := jwt.GenerateToken(db, user)
 
 		if err != nil {
 			c.JSON(401, gin.H{"error": err})

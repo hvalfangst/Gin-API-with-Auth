@@ -8,8 +8,8 @@ import (
 )
 
 func ConfigureRoute(r *gin.Engine, db *pg.DB) {
-	r.POST("/wines", middleware.Authorize(db, "WRITE"), handler.CreateWine(db))
-	r.GET("/wines/:id", middleware.Authorize(db, "READ"), handler.GetWineById(db))
-	r.PUT("/wines/:id", middleware.Authorize(db, "EDIT"), handler.UpdateWine(db))
-	r.DELETE("/wines/:id", middleware.Authorize(db, "DELETE"), handler.DeleteWine(db))
+	r.POST("/wines", middleware.Authorize(db, "WRITE"), handler.CreateWine(db), middleware.PersistTokenUsage(db, "POST /wines"))
+	r.GET("/wines/:id", middleware.Authorize(db, "READ"), handler.GetWineById(db), middleware.PersistTokenUsage(db, "GET /wines/:id"))
+	r.PUT("/wines/:id", middleware.Authorize(db, "EDIT"), handler.UpdateWine(db), middleware.PersistTokenUsage(db, "PUT /wines/:id"))
+	r.DELETE("/wines/:id", middleware.Authorize(db, "DELETE"), handler.DeleteWine(db), middleware.PersistTokenUsage(db, "DELETE /wines/:id"))
 }

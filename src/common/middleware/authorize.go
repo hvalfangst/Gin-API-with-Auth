@@ -5,8 +5,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-pg/pg/v10"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
+	tokensRepo "hvalfangst/gin-api-with-auth/src/common/security/jwt/tokens/repository"
 	"hvalfangst/gin-api-with-auth/src/common/utils/configuration"
-	"hvalfangst/gin-api-with-auth/src/users/repository"
+	usersRepo "hvalfangst/gin-api-with-auth/src/users/repository"
 	"strings"
 	"time"
 )
@@ -81,6 +83,7 @@ func Authorize(db *pg.DB, requiredAccess string) gin.HandlerFunc {
 		email := claims["sub"].(string)
 		access := claims["access"].(string)
 		expiration := time.Unix(int64(claims["exp"].(float64)), 0)
+		tokenID := claims["id"].(string)
 
 		// Check if the token is expired
 		if time.Now().After(expiration) {
@@ -91,9 +94,28 @@ func Authorize(db *pg.DB, requiredAccess string) gin.HandlerFunc {
 		}
 
 		// Check whether user associated with email extracted from claims exists in DB
-		user, err := repository.GetByEmail(db, email)
+		user, err := usersRepo.GetByEmail(db, email)
 		if err != nil {
 			fmt.Println("User associated with claims not present in DB")
+			c.JSON(401, gin.H{"error": "Unauthorized"})
+			c.Abort()
+			return
+		}
+
+		// Parse the 'uuid' string to an uuid.UUID type
+		parsedUUID, err := uuid.Parse(tokenID)
+		if err != nil {
+			fmt.Println("Error parsing UUID:", err)
+			c.JSON(400, gin.H{"error": "Invalid UUID"})
+			c.Abort()
+			return
+		}
+
+		// Check whether a token associated with uuid derived for claims exists in 'tokens' table
+		_, err = tokensRepo.GetTokenByID(db, parsedUUID)
+
+		if err != nil {
+			fmt.Println("Token associated with uuid derived from claims not present in DB")
 			c.JSON(401, gin.H{"error": "Unauthorized"})
 			c.Abort()
 			return
@@ -115,6 +137,11 @@ func Authorize(db *pg.DB, requiredAccess string) gin.HandlerFunc {
 			return
 		}
 
+		// Set tokenID on context as it is likely to be utilized in the final middleware function 'PersistTokenUsage'
+		c.Set("tokenID", tokenID)
+
+		// Request has been successfully authorized
+		c.Next()
 	}
 }
 

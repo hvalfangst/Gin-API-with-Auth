@@ -2,7 +2,9 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/go-pg/pg/v10"
 	"hvalfangst/gin-api-with-auth/src/common/db"
+	tokens "hvalfangst/gin-api-with-auth/src/common/security/jwt/tokens/model"
 	"hvalfangst/gin-api-with-auth/src/common/utils/configuration"
 	users "hvalfangst/gin-api-with-auth/src/users/model"
 	usersRoute "hvalfangst/gin-api-with-auth/src/users/route"
@@ -24,6 +26,21 @@ func main() {
 	database := db.ConnectDatabase(conf.(configuration.Db))
 	defer db.CloseDatabase(database)
 
+	// Create the following tables: 'users', 'wines', 'tokens' and 'token_usages'
+	createDBTables(err, database)
+
+	// Serve context resources under routes '/users' and '/wines'
+	usersRoute.ConfigureRoute(r, database)
+	winesRoute.ConfigureRoute(r, database)
+
+	// Run the server
+	if err := r.Run(":8080"); err != nil {
+		log.Fatalf("Failed to run server: %v", err)
+	}
+}
+
+func createDBTables(err error, database *pg.DB) {
+
 	// Create the 'users' table
 	err = db.CreateTable(database, (*users.User)(nil))
 	if err != nil {
@@ -36,11 +53,15 @@ func main() {
 		log.Fatalf("Error creating tables: %v", err)
 	}
 
-	usersRoute.ConfigureRoute(r, database)
-	winesRoute.ConfigureRoute(r, database)
+	// Create the 'tokens' table
+	err = db.CreateTable(database, (*tokens.Token)(nil))
+	if err != nil {
+		log.Fatalf("Error creating tables: %v", err)
+	}
 
-	// Run the server
-	if err := r.Run(":8080"); err != nil {
-		log.Fatalf("Failed to run server: %v", err)
+	// Create the 'token_usages' table
+	err = db.CreateTable(database, (*tokens.TokenUsage)(nil))
+	if err != nil {
+		log.Fatalf("Error creating tables: %v", err)
 	}
 }

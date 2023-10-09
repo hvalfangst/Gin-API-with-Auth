@@ -32,7 +32,7 @@ func Authenticate(db *pg.DB) gin.HandlerFunc {
 		// Store the username in the Gin context so that it may be used in the 'Login' handler
 		c.Set("username", username)
 
-		// Authentication successful, proceed to next handler in the chain
+		// User associated with request have been successfully authenticated
 		c.Next()
 	}
 }

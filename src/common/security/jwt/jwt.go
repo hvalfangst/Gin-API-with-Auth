@@ -1,18 +1,26 @@
 package jwt
 
 import (
+	"github.com/go-pg/pg/v10"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
+	tokenModel "hvalfangst/gin-api-with-auth/src/common/security/jwt/tokens/model"
+	tokenRepo "hvalfangst/gin-api-with-auth/src/common/security/jwt/tokens/repository"
 	"hvalfangst/gin-api-with-auth/src/common/utils/configuration"
 	"hvalfangst/gin-api-with-auth/src/users/model"
 	"time"
 )
 
-func GenerateToken(user *model.User) (string, error) {
+func GenerateToken(db *pg.DB, user *model.User) (string, error) {
+
+	// Generate a new v4 UUID as identifier for token. This value will be used as primary key
+	tokenID := uuid.New()
 
 	// Define the JWT claims
 	claims := jwt.MapClaims{
 		"sub":    user.Email,
 		"access": user.Access,
+		"id":     tokenID,                          // PK utilized to query table 'tokens'
 		"exp":    time.Now().Add(time.Hour).Unix(), // Token expires in 1 hour
 	}
 
@@ -28,5 +36,25 @@ func GenerateToken(user *model.User) (string, error) {
 		return "", err
 	}
 
+	// Insert struct containing necessary metadata in order to query tokens based from claims
+	err = persistToken(db, user, tokenID, err)
+
+	if err != nil {
+		return "", err
+	}
+
 	return tokenString, nil
+}
+
+func persistToken(db *pg.DB, user *model.User, tokenID uuid.UUID, err error) error {
+
+	tokenStruct := tokenModel.Token{
+		ID:           tokenID,
+		CreationDate: time.Now(),
+		UserID:       user.ID,
+		User:         user,
+	}
+
+	err = tokenRepo.CreateToken(db, &tokenStruct)
+	return err
 }

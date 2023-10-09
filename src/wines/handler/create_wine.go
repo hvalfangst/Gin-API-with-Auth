@@ -23,6 +23,8 @@ func CreateWine(db *pg.DB) gin.HandlerFunc {
 			c.JSON(500, gin.H{"error": "Failed to create wine", "message": err.Error()})
 			return
 		}
+
+		c.Set("snowman", "ERNST")
 		c.JSON(201, gin.H{"wine": input})
 	}
 }
