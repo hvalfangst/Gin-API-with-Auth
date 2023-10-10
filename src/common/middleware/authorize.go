@@ -6,8 +6,8 @@ import (
 	"github.com/go-pg/pg/v10"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
-	tokensRepo "hvalfangst/gin-api-with-auth/src/common/security/jwt/tokens/repository"
 	"hvalfangst/gin-api-with-auth/src/common/utils/configuration"
+	tokensRepo "hvalfangst/gin-api-with-auth/src/tokens/repository"
 	usersRepo "hvalfangst/gin-api-with-auth/src/users/repository"
 	"strings"
 	"time"
@@ -112,7 +112,7 @@ func Authorize(db *pg.DB, requiredAccess string) gin.HandlerFunc {
 		}
 
 		// Check whether a token associated with uuid derived for claims exists in 'tokens' table
-		_, err = tokensRepo.GetTokenByID(db, parsedUUID)
+		_, err = tokensRepo.GetToken(db, parsedUUID)
 
 		if err != nil {
 			fmt.Println("Token associated with uuid derived from claims not present in DB")
@@ -137,7 +137,7 @@ func Authorize(db *pg.DB, requiredAccess string) gin.HandlerFunc {
 			return
 		}
 
-		// Set tokenID on context as it is likely to be utilized in the final middleware function 'PersistTokenUsage'
+		// Set tokenID on context as it is likely to be utilized in the final middleware function 'LogTokenActivity'
 		c.Set("tokenID", tokenID)
 
 		// Request has been successfully authorized

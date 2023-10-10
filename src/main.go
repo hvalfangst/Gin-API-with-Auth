@@ -4,8 +4,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-pg/pg/v10"
 	"hvalfangst/gin-api-with-auth/src/common/db"
-	tokens "hvalfangst/gin-api-with-auth/src/common/security/jwt/tokens/model"
 	"hvalfangst/gin-api-with-auth/src/common/utils/configuration"
+	tokens "hvalfangst/gin-api-with-auth/src/tokens/model"
+	tokensRoute "hvalfangst/gin-api-with-auth/src/tokens/route"
 	users "hvalfangst/gin-api-with-auth/src/users/model"
 	usersRoute "hvalfangst/gin-api-with-auth/src/users/route"
 	wines "hvalfangst/gin-api-with-auth/src/wines/model"
@@ -26,12 +27,13 @@ func main() {
 	database := db.ConnectDatabase(conf.(configuration.Db))
 	defer db.CloseDatabase(database)
 
-	// Create the following tables: 'users', 'wines', 'tokens' and 'token_usages'
+	// Create the following tables: 'users', 'wines', 'tokens' and 'token_activities'
 	createDBTables(err, database)
 
-	// Serve context resources under routes '/users' and '/wines'
+	// Serve context resources under routes '/users', '/wines', '/tokens' and '/token-activities'
 	usersRoute.ConfigureRoute(r, database)
 	winesRoute.ConfigureRoute(r, database)
+	tokensRoute.ConfigureRoute(r, database)
 
 	// Run the server
 	if err := r.Run(":8080"); err != nil {
@@ -59,8 +61,8 @@ func createDBTables(err error, database *pg.DB) {
 		log.Fatalf("Error creating tables: %v", err)
 	}
 
-	// Create the 'token_usages' table
-	err = db.CreateTable(database, (*tokens.TokenUsage)(nil))
+	// Create the 'token_activities' table
+	err = db.CreateTable(database, (*tokens.TokenActivity)(nil))
 	if err != nil {
 		log.Fatalf("Error creating tables: %v", err)
 	}

@@ -14,4 +14,5 @@ type Wine struct {
 	Alcohol     float64  `json:"alcohol"`
 	Finish      string   `json:"finish"`
 	Pairing     []string `json:"pairing"`
+	_           struct{} `pg:"_schema:wines"`
 }

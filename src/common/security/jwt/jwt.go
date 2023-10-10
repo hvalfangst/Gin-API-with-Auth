@@ -4,9 +4,9 @@ import (
 	"github.com/go-pg/pg/v10"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
-	tokenModel "hvalfangst/gin-api-with-auth/src/common/security/jwt/tokens/model"
-	tokenRepo "hvalfangst/gin-api-with-auth/src/common/security/jwt/tokens/repository"
 	"hvalfangst/gin-api-with-auth/src/common/utils/configuration"
+	tokenModel "hvalfangst/gin-api-with-auth/src/tokens/model"
+	tokenRepo "hvalfangst/gin-api-with-auth/src/tokens/repository"
 	"hvalfangst/gin-api-with-auth/src/users/model"
 	"time"
 )
@@ -24,7 +24,7 @@ func GenerateToken(db *pg.DB, user *model.User) (string, error) {
 		"exp":    time.Now().Add(time.Hour).Unix(), // Token expires in 1 hour
 	}
 
-	// Create the JWT token with the claims
+	// CreateToken the JWT token with the claims
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	// Extract JWT configuration
@@ -52,7 +52,6 @@ func persistToken(db *pg.DB, user *model.User, tokenID uuid.UUID, err error) err
 		ID:           tokenID,
 		CreationDate: time.Now(),
 		UserID:       user.ID,
-		User:         user,
 	}
 
 	err = tokenRepo.CreateToken(db, &tokenStruct)

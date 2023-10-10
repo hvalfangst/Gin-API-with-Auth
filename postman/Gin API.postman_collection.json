@@ -13,6 +13,33 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Writer\",\r\n    \"email\": \"hei\",\r\n    \"password\": \"hallo\",\r\n    \"access\": \"DELETE\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/users",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
 					"raw": "{\r\n    \"name\": \"Ernst\",\r\n    \"email\": \"ernst@schee.de\",\r\n    \"password\": \"coldfrontcoming256\",\r\n    \"role\": \"READER\"\r\n}",
 					"options": {
 						"raw": {
@@ -147,6 +174,186 @@
 						"users",
 						"email",
 						"ernst@schee.de2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create wine",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJXUklURSIsImV4cCI6MTY5NjY4NDYwNywic3ViIjoid3JpdGVAZ21haWwuY29tMiJ9.pCnukgicgYs58rctPm1_WF7RlQJUjPzeJqVcXTVAW3I",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Château Margaux\",\r\n    \"grape\": \"Cabernet Sauvignon\",\r\n    \"vintage\": 2016,\r\n    \"region\": \"Margaux, Bordeaux\",\r\n    \"description\": \"Château Margaux is a Grand Cru Classé wine estate in the Bordeaux region of France. It is known for its exceptional Cabernet Sauvignon wines with a rich history dating back to the 12th century.\",\r\n    \"body\": \"Full-Bodied\",\r\n    \"sweetness\": \"Dry\",\r\n    \"acidity\": \"Medium\",\r\n    \"tannins\": \"High\",\r\n    \"alcohol\": 13.5,\r\n    \"finish\": \"Long\",\r\n    \"pairing\": [\"Grilled Steak\", \"Roast Lamb\", \"Cheese Platter\"]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/wines",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"wines"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get wine",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJXUklURSIsImV4cCI6MTY5NjgwMDY5NCwic3ViIjoid3JpdGVAZ21haWwuY29tMiJ9.7X1bXlHBHNAUDHRYH_8o5JzMGRk_2v9sXSA8ZbMx1Po",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/wines/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"wines",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update wine",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"name\": \"Château Margaux\",\r\n        \"variety\": \"Cabernet Sauvignon\",\r\n        \"vintage\": 2015,\r\n        \"region\": \"Bordeaux\",\r\n        \"description\": \"An elegant and classic Bordeaux wine.\",\r\n        \"body\": \"Full\",\r\n        \"sweetness\": \"Dry\",\r\n        \"acidity\": \"Medium\",\r\n        \"tannins\": \"High\",\r\n        \"alcohol\": 13.5,\r\n        \"finish\": \"Long\",\r\n        \"pairing\": [\"Filet Mignon\", \"Lamb Chops\"],\r\n        \"price\": 200.0\r\n    },\r\n    {\r\n        \"name\": \"Barolo\",\r\n        \"variety\": \"Nebbiolo\",\r\n        \"vintage\": 2016,\r\n        \"region\": \"Piedmont\",\r\n        \"description\": \"A bold and complex Italian red wine.\",\r\n        \"body\": \"Full\",\r\n        \"sweetness\": \"Dry\",\r\n        \"acidity\": \"High\",\r\n        \"tannins\": \"High\",\r\n        \"alcohol\": 14.0,\r\n        \"finish\": \"Long\",\r\n        \"pairing\": [\"Osso Buco\", \"Truffle Risotto\"],\r\n        \"price\": 150.0\r\n    },\r\n    {\r\n        \"name\": \"Chardonnay\",\r\n        \"variety\": \"Chardonnay\",\r\n        \"vintage\": 2018,\r\n        \"region\": \"California\",\r\n        \"description\": \"A rich and buttery Californian white wine.\",\r\n        \"body\": \"Full\",\r\n        \"sweetness\": \"Dry\",\r\n        \"acidity\": \"Medium\",\r\n        \"tannins\": \"Low\",\r\n        \"alcohol\": 13.5,\r\n        \"finish\": \"Medium\",\r\n        \"pairing\": [\"Grilled Shrimp\", \"Roast Chicken\"],\r\n        \"price\": 30.0\r\n    },\r\n    {\r\n        \"name\": \"Malbec\",\r\n        \"variety\": \"Malbec\",\r\n        \"vintage\": 2017,\r\n        \"region\": \"Mendoza\",\r\n        \"description\": \"A fruity and bold Argentine red wine.\",\r\n        \"body\": \"Medium\",\r\n        \"sweetness\": \"Dry\",\r\n        \"acidity\": \"Medium\",\r\n        \"tannins\": \"Medium\",\r\n        \"alcohol\": 14.0,\r\n        \"finish\": \"Medium\",\r\n        \"pairing\": [\"Steak\", \"Empanadas\"],\r\n        \"price\": 25.0\r\n    },\r\n    {\r\n        \"name\": \"Sauvignon Blanc\",\r\n        \"variety\": \"Sauvignon Blanc\",\r\n        \"vintage\": 2020,\r\n        \"region\": \"Marlborough\",\r\n        \"description\": \"A crisp and refreshing New Zealand white wine.\",\r\n        \"body\": \"Light\",\r\n        \"sweetness\": \"Dry\",\r\n        \"acidity\": \"High\",\r\n        \"tannins\": \"Low\",\r\n        \"alcohol\": 12.5,\r\n        \"finish\": \"Short\",\r\n        \"pairing\": [\"Seafood Salad\", \"Goat Cheese\"],\r\n        \"price\": 20.0\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/wines/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"wines",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete wine",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/wines/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"wines",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get token",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJXUklURSIsImV4cCI6MTY5NjgwMDY5NCwic3ViIjoid3JpdGVAZ21haWwuY29tMiJ9.7X1bXlHBHNAUDHRYH_8o5JzMGRk_2v9sXSA8ZbMx1Po",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/wines/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"wines",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get token activity",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJXUklURSIsImV4cCI6MTY5NjgwMDY5NCwic3ViIjoid3JpdGVAZ21haWwuY29tMiJ9.7X1bXlHBHNAUDHRYH_8o5JzMGRk_2v9sXSA8ZbMx1Po",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/token-activities/5e841652-9a16-4498-967d-f86e70e4cfbb",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"token-activities",
+						"5e841652-9a16-4498-967d-f86e70e4cfbb"
 					]
 				}
 			},
