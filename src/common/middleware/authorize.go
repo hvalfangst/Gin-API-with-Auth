@@ -102,6 +102,14 @@ func Authorize(db *pg.DB, requiredAccess string) gin.HandlerFunc {
 			return
 		}
 
+		// Check if the given user has been deactivated
+		if user.Deactivated {
+			fmt.Println("User associated with claims is deactivated in DB")
+			c.JSON(401, gin.H{"error": "Unauthorized"})
+			c.Abort()
+			return
+		}
+
 		// Parse the 'uuid' string to an uuid.UUID type
 		parsedUUID, err := uuid.Parse(tokenID)
 		if err != nil {

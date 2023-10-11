@@ -8,5 +8,8 @@ import (
 
 func ConfigureRoute(r *gin.Engine, db *pg.DB) {
 	r.GET("/tokens/:id", handler.GetToken(db))
+	r.GET("/tokens", handler.ListTokens(db))
 	r.GET("/token-activities/:id", handler.GetTokenActivity(db))
+	r.DELETE("/tokens/:id", handler.DeleteToken(db))
+
 }

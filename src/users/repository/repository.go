@@ -35,6 +35,15 @@ func GetByEmail(db *pg.DB, email string) (*model.User, error) {
 	return user, nil
 }
 
+func Update(db *pg.DB, ID int64, user *model.User) error {
+	_, err := db.Model(user).Where("id = ?", ID).Update()
+	if err != nil {
+		log.Printf("Error updating user: %v", err)
+		return err
+	}
+	return nil
+}
+
 func DeleteByID(db *pg.DB, userID int64) error {
 	user := &model.User{ID: userID}
 

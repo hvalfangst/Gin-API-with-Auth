@@ -14,4 +14,6 @@ func ConfigureRoute(r *gin.Engine, db *pg.DB) {
 	r.DELETE("/users/:id", handler.DeleteUserById(db))
 	r.GET("/users/email/:email", handler.GetUserByEmail(db))
 	r.DELETE("/users/email/:email", handler.DeleteUserByEmail(db))
+	r.PATCH("/users/deactivate/:id", handler.DeactivateUser(db))
+	r.PATCH("/users/mark-for-deletion/:id", handler.MarkUserForDeletion(db))
 }

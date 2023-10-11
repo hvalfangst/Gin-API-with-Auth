@@ -28,6 +28,16 @@ func GetToken(db *pg.DB, ID uuid.UUID) (*model.Token, error) {
 	return token, nil
 }
 
+func ListTokens(db *pg.DB) ([]*model.Token, error) {
+	var tokens []*model.Token
+	err := db.Model(&tokens).Select()
+	if err != nil {
+		log.Printf("Error retrieving token by ID: %v", err)
+		return nil, err
+	}
+	return tokens, nil
+}
+
 func DeleteToken(db *pg.DB, ID uuid.UUID) error {
 	token := &model.Token{ID: ID}
 	_, err := db.Model(token).WherePK().Delete()
@@ -61,7 +71,7 @@ func GetTokenActivity(db *pg.DB, ID uuid.UUID) ([]*model.TokenActivity, error) {
 
 func DeleteTokenActivity(db *pg.DB, ID uuid.UUID) error {
 	tokenActivity := &model.TokenActivity{}
-	_, err := db.Model(tokenActivity).Where("token_id = ?", ID).Delete()
+	_, err := db.Model(tokenActivity).Where("id = ?", ID).Delete()
 	if err != nil {
 		return err
 	}
