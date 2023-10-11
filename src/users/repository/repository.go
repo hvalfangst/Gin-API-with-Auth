@@ -62,3 +62,14 @@ func DeleteByEmail(db *pg.DB, email string) error {
 	}
 	return nil
 }
+
+func GetUsersForDeletion(db *pg.DB) ([]*model.User, error) {
+	var usersForDeletion []*model.User
+	err := db.Model(&usersForDeletion).
+		Where("for_deletion = ?", true).
+		Select()
+	if err != nil {
+		return nil, err
+	}
+	return usersForDeletion, nil
+}

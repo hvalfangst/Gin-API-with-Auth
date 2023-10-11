@@ -180,6 +180,42 @@
 			"response": []
 		},
 		{
+			"name": "Mark user for deletion",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJXUklURSIsImV4cCI6MTY5NjgwMDY5NCwic3ViIjoid3JpdGVAZ21haWwuY29tMiJ9.7X1bXlHBHNAUDHRYH_8o5JzMGRk_2v9sXSA8ZbMx1Po",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/users/mark-for-deletion/1?deletionTimeInSeconds=60",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"mark-for-deletion",
+						"1"
+					],
+					"query": [
+						{
+							"key": "deletionTimeInSeconds",
+							"value": "60"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Create wine",
 			"request": {
 				"auth": {
@@ -325,6 +361,63 @@
 					"path": [
 						"wines",
 						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List tokens",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJXUklURSIsImV4cCI6MTY5NjgwMDY5NCwic3ViIjoid3JpdGVAZ21haWwuY29tMiJ9.7X1bXlHBHNAUDHRYH_8o5JzMGRk_2v9sXSA8ZbMx1Po",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/tokens",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tokens"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete token",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJXUklURSIsImV4cCI6MTY5NjgwMDY5NCwic3ViIjoid3JpdGVAZ21haWwuY29tMiJ9.7X1bXlHBHNAUDHRYH_8o5JzMGRk_2v9sXSA8ZbMx1Po",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/tokens/",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tokens",
+						""
 					]
 				}
 			},

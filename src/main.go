@@ -7,9 +7,10 @@ import (
 	"hvalfangst/gin-api-with-auth/src/common/utils/configuration"
 	tokens "hvalfangst/gin-api-with-auth/src/tokens/model"
 	tokensRoute "hvalfangst/gin-api-with-auth/src/tokens/route"
-	users "hvalfangst/gin-api-with-auth/src/users/model"
+	usersModel "hvalfangst/gin-api-with-auth/src/users/model"
 	usersRoute "hvalfangst/gin-api-with-auth/src/users/route"
-	wines "hvalfangst/gin-api-with-auth/src/wines/model"
+	usersRoutines "hvalfangst/gin-api-with-auth/src/users/routine"
+	winesModel "hvalfangst/gin-api-with-auth/src/wines/model"
 	winesRoute "hvalfangst/gin-api-with-auth/src/wines/route"
 	"log"
 )
@@ -35,6 +36,9 @@ func main() {
 	winesRoute.ConfigureRoute(r, database)
 	tokensRoute.ConfigureRoute(r, database)
 
+	// Start goroutine which periodically checks for users marked for deletion and deletes them if so
+	go usersRoutines.StartUserDeletionRoutine(database)
+
 	// Run the server
 	if err := r.Run(":8080"); err != nil {
 		log.Fatalf("Failed to run server: %v", err)
@@ -44,13 +48,13 @@ func main() {
 func createDBTables(err error, database *pg.DB) {
 
 	// Create the 'users' table
-	err = db.CreateTable(database, (*users.User)(nil))
+	err = db.CreateTable(database, (*usersModel.User)(nil))
 	if err != nil {
 		log.Fatalf("Error creating tables: %v", err)
 	}
 
 	// Create the 'wines' table
-	err = db.CreateTable(database, (*wines.Wine)(nil))
+	err = db.CreateTable(database, (*winesModel.Wine)(nil))
 	if err != nil {
 		log.Fatalf("Error creating tables: %v", err)
 	}
