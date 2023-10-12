@@ -8,12 +8,14 @@ import (
 type Token struct {
 	ID           uuid.UUID `pg:"type:uuid,pk"`
 	CreationDate time.Time
-	UserID       int64    // Foreign key to User
+	UserID       int64
+	Activities   []*TokenActivity
 	_            struct{} `pg:"_schema:tokens"`
 }
 
 type TokenActivity struct {
-	ID       uuid.UUID `pg:"type:uuid,pk"`
+	ID       int64
+	TokenID  uuid.UUID `pg:"type:uuid"`
 	Endpoint string
 	UsedAt   time.Time
 	_        struct{} `pg:"_schema:token_activities"`

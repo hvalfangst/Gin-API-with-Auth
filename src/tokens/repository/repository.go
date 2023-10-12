@@ -32,9 +32,31 @@ func ListTokens(db *pg.DB) ([]*model.Token, error) {
 	var tokens []*model.Token
 	err := db.Model(&tokens).Select()
 	if err != nil {
-		log.Printf("Error retrieving token by ID: %v", err)
+		log.Printf("Error retrieving tokens: %v", err)
 		return nil, err
 	}
+
+	// Create a map to store token activities associated with each token
+	activitiesMap := make(map[uuid.UUID][]*model.TokenActivity)
+
+	// Fetch all token activities
+	var activities []*model.TokenActivity
+	err = db.Model(&activities).Select()
+	if err != nil {
+		log.Printf("Error retrieving token activities: %v", err)
+		return nil, err
+	}
+
+	// Organize token activities by token ID
+	for _, activity := range activities {
+		activitiesMap[activity.TokenID] = append(activitiesMap[activity.TokenID], activity)
+	}
+
+	// Populate token activities for each token
+	for _, token := range tokens {
+		token.Activities = activitiesMap[token.ID]
+	}
+
 	return tokens, nil
 }
 
@@ -61,7 +83,7 @@ func CreateTokenUsage(db *pg.DB, tokenUsage *model.TokenActivity) error {
 
 func GetTokenActivity(db *pg.DB, ID uuid.UUID) ([]*model.TokenActivity, error) {
 	var tokenActivity []*model.TokenActivity
-	err := db.Model(&tokenActivity).Where("id = ?", ID).Select()
+	err := db.Model(&tokenActivity).Where("token_id = ?", ID).Select()
 	if err != nil {
 		log.Printf("Error retrieving token activity for token ID %s: %v", ID.String(), err)
 		return nil, err

@@ -26,7 +26,7 @@ func LogTokenActivity(db *pg.DB, endpoint string) gin.HandlerFunc {
 		}
 
 		tokenUsageStruct := tokensModel.TokenActivity{
-			ID:       parsedUUID,
+			TokenID:  parsedUUID,
 			Endpoint: endpoint,
 			UsedAt:   time.Now(),
 		}
