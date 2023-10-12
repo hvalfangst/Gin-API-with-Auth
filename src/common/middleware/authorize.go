@@ -93,53 +93,14 @@ func Authorize(db *pg.DB, requiredAccess string) gin.HandlerFunc {
 			return
 		}
 
-		// Check whether user associated with email extracted from claims exists in DB
-		user, err := usersRepo.GetByEmail(db, email)
-		if err != nil {
-			fmt.Println("User associated with claims not present in DB")
-			c.JSON(401, gin.H{"error": "Unauthorized"})
-			c.Abort()
-			return
-		}
-
-		// Check if the given user has been deactivated
-		if user.Deactivated {
-			fmt.Println("User associated with claims is deactivated in DB")
-			c.JSON(401, gin.H{"error": "Unauthorized"})
-			c.Abort()
-			return
-		}
-
-		// Parse the 'uuid' string to an uuid.UUID type
-		parsedUUID, err := uuid.Parse(tokenID)
-		if err != nil {
-			fmt.Println("Error parsing UUID:", err)
-			c.JSON(400, gin.H{"error": "Invalid UUID"})
-			c.Abort()
-			return
-		}
-
-		// Check whether a token associated with uuid derived for claims exists in 'tokens' table
-		_, err = tokensRepo.GetToken(db, parsedUUID)
-
-		if err != nil {
-			fmt.Println("Token associated with uuid derived from claims not present in DB")
-			c.JSON(401, gin.H{"error": "Unauthorized"})
-			c.Abort()
-			return
-		}
-
-		// Ensure that access rights derived from claims matched that stored in DB
-		if user.Access != access {
-			fmt.Println("Access rights mismatch between claims and DB")
-			c.JSON(401, gin.H{"error": "Unauthorized"})
-			c.Abort()
-			return
+		// Extra measures are taken for the DELETE route
+		if requiredAccess == "DELETE" {
+			validateDeleteAccess(c, err, db, email, access, tokenID)
 		}
 
 		// Check if the user's role grants access to the requiredAccess or its higher-level counterparts
-		if !hasAccess(user.Access, requiredAccess) {
-			fmt.Printf("User has [%v] access, but the minimum required access for this endpoint is [%v]\n", user.Access, requiredAccess)
+		if !hasAccess(access, requiredAccess) {
+			fmt.Printf("User has [%v] access, but the minimum required access for this endpoint is [%v]\n", access, requiredAccess)
 			c.JSON(401, gin.H{"error": "Unauthorized"})
 			c.Abort()
 			return
@@ -150,6 +111,48 @@ func Authorize(db *pg.DB, requiredAccess string) gin.HandlerFunc {
 
 		// Request has been successfully authorized
 		c.Next()
+	}
+}
+
+func validateDeleteAccess(c *gin.Context, err error, db *pg.DB, email string, access string, tokenID string) {
+
+	// Check whether user associated with email extracted from claims exists in DB
+	user, err := usersRepo.GetByEmail(db, email)
+	if err != nil {
+		fmt.Println("User associated with claims not present in DB")
+		c.JSON(401, gin.H{"error": "Unauthorized"})
+		c.Abort()
+	}
+
+	// Check if the given user has been deactivated
+	if user.Deactivated {
+		fmt.Println("User associated with claims is deactivated in DB")
+		c.JSON(401, gin.H{"error": "Unauthorized"})
+		c.Abort()
+	}
+
+	// Ensure that access rights derived from claims matched that stored in DB
+	if user.Access != access {
+		fmt.Println("Access rights mismatch between claims and DB")
+		c.JSON(401, gin.H{"error": "Unauthorized"})
+		c.Abort()
+	}
+
+	// Parse the 'uuid' string to an uuid.UUID type
+	parsedUUID, err := uuid.Parse(tokenID)
+	if err != nil {
+		fmt.Println("Error parsing UUID:", err)
+		c.JSON(400, gin.H{"error": "Invalid UUID"})
+		c.Abort()
+	}
+
+	// Check whether a token associated with uuid derived for claims exists in 'tokens' table
+	_, err = tokensRepo.GetToken(db, parsedUUID)
+
+	if err != nil {
+		fmt.Println("Token associated with uuid derived from claims not present in DB")
+		c.JSON(401, gin.H{"error": "Unauthorized"})
+		c.Abort()
 	}
 }
 
