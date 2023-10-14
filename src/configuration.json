@@ -6,6 +6,6 @@
     "database": "hvalfangst_db"
   },
   "jwt": {
-    "encryption_key": "NeverStoreKeysLikeThisUseEnvironmentVariableMappingInstead"
+    "encryption_key": "THIS_SHOULD_COME_FROM_KEY_VAULT"
   }
 }
